@@ -16,4 +16,31 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+namespace UnicornFail\PhpOption\Some;
+
+class SomeFloat extends SomeType
+{
+    /**
+     * {@inheritDoc}
+     */
+    public static function getValidTypes()
+    {
+        return array('double');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function applies($value, array $options = array())
+    {
+        return is_float($value) || (is_numeric($value) && strpos("$value", '.') !== false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function transformValue($value, array $options = array())
+    {
+        return floatval($value);
+    }
+}

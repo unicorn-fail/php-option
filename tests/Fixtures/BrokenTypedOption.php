@@ -16,4 +16,13 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+namespace UnicornFail\PhpOption\Tests\Fixtures;
+
+use UnicornFail\PhpOption\TypedOption;
+
+abstract class BrokenTypedOption extends TypedOption
+{
+    protected static $typedOptions = array(
+        '\\UnicornFail\\PhpOption\\Some'
+    );
+}

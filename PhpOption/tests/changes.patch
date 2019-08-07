@@ -1,0 +1,397 @@
+From 5c815dbd04e88fedb84eb6b7c531601a8a9c3866 Mon Sep 17 00:00:00 2001
+From: Mark Carver <mark.carver@me.com>
+Date: Wed, 7 Aug 2019 00:24:31 -0500
+Subject: [PATCH] Update tests
+
+Signed-off-by: Mark Carver <mark.carver@me.com>
+---
+ tests/PhpOption/Tests/EnsureTest.php     | 31 +++++++++++--
+ tests/PhpOption/Tests/LazyOptionTest.php | 41 +++++++++++++++---
+ tests/PhpOption/Tests/NoneTest.php       | 20 ++++++++-
+ tests/PhpOption/Tests/OptionTest.php     | 55 ++++++++++++++++++------
+ tests/PhpOption/Tests/SomeTest.php       | 55 ++++++++++++++++++------
+ 5 files changed, 165 insertions(+), 37 deletions(-)
+ mode change 100644 => 100755 tests/PhpOption/Tests/EnsureTest.php
+ mode change 100644 => 100755 tests/PhpOption/Tests/LazyOptionTest.php
+ mode change 100644 => 100755 tests/PhpOption/Tests/NoneTest.php
+ mode change 100644 => 100755 tests/PhpOption/Tests/OptionTest.php
+ mode change 100644 => 100755 tests/PhpOption/Tests/SomeTest.php
+
+diff --git tests/PhpOption/Tests/EnsureTest.php tests/PhpOption/Tests/EnsureTest.php
+old mode 100644
+new mode 100755
+index 6bd018f..ac9ed03
+--- tests/PhpOption/Tests/EnsureTest.php
++++ tests/PhpOption/Tests/EnsureTest.php
+@@ -1,22 +1,47 @@
+ <?php
+ 
++/**
++ * Copyright 2019 Mark Carver <mark.carver@me.com>
++ * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
+ namespace PhpOption\Tests;
+ 
+ use PhpOption\None;
+ use PhpOption\Option;
+ use PhpOption\Some;
++use PHPUnit\Framework\TestCase;
+ 
+ /**
+  * Tests for Option::ensure() method
+  *
+- * @covers Option::ensure
++ * @covers \PhpOption\Option::ensure
+  */
+-class EnsureTest extends \PHPUnit_Framework_TestCase
++class EnsureTest extends TestCase
+ {
+     protected function ensure($value, $noneValue = null)
+     {
+         $option = Option::ensure($value, $noneValue);
+-        $this->assertInstanceOf('PhpOption\Option', $option);
++        // Due to some weird bug in PHP 5.3, class_alias() doesn't work as expected.
++        // Instead, to make it work, the classes have to be extended which breaks inheritance.
++        // To get these tests working properly, the real class it's returning has to be verified.
++        if (PHP_MAJOR_VERSION === 5 && PHP_MINOR_VERSION === 3) {
++            $this->assertInstanceOf('UnicornFail\\PhpOption\\OptionInterface', $option);
++        } else {
++            $this->assertInstanceOf('PhpOption\\Option', $option);
++        }
+         return $option;
+     }
+ 
+diff --git tests/PhpOption/Tests/LazyOptionTest.php tests/PhpOption/Tests/LazyOptionTest.php
+old mode 100644
+new mode 100755
+index 30b1347..9d7020a
+--- tests/PhpOption/Tests/LazyOptionTest.php
++++ tests/PhpOption/Tests/LazyOptionTest.php
+@@ -1,10 +1,28 @@
+ <?php
+ 
++/**
++ * Copyright 2019 Mark Carver <mark.carver@me.com>
++ * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
+ namespace PhpOption\Tests;
+ 
+ use PhpOption\LazyOption;
++use PHPUnit\Framework\TestCase;
+ 
+-class LazyOptionTest extends \PHPUnit_Framework_TestCase
++class LazyOptionTest extends TestCase
+ {
+     private $subject;
+ 
+@@ -106,7 +124,7 @@ class LazyOptionTest extends \PHPUnit_Framework_TestCase
+ 
+     /**
+      * @expectedException \RuntimeException
+-     * @expectedExceptionMessage Expected instance of \PhpOption\Option
++     * @expectedExceptionMessage Lazy option callbacks must return an instance of \UnicornFail\PhpOption\OptionInterface.
+      */
+     public function testExceptionIsThrownIfCallbackReturnsNonOption()
+     {
+@@ -121,8 +139,8 @@ class LazyOptionTest extends \PHPUnit_Framework_TestCase
+     }
+ 
+     /**
+-     * @expectedException InvalidArgumentException
+-     * @expectedExceptionMessage Invalid callback given
++     * @expectedException \UnicornFail\PhpOption\Exceptions\InvalidCallableException
++     * @expectedExceptionMessage Invalid callable "invalidCallback"
+      */
+     public function testInvalidCallbackAndConstructor()
+     {
+@@ -130,8 +148,8 @@ class LazyOptionTest extends \PHPUnit_Framework_TestCase
+     }
+ 
+     /**
+-     * @expectedException InvalidArgumentException
+-     * @expectedExceptionMessage Invalid callback given
++     * @expectedException \UnicornFail\PhpOption\Exceptions\InvalidCallableException
++     * @expectedExceptionMessage Invalid callable "invalidCallback"
+      */
+     public function testInvalidCallbackAndCreate()
+     {
+@@ -153,7 +171,16 @@ class LazyOptionTest extends \PHPUnit_Framework_TestCase
+     {
+         $called = false;
+         $self = $this;
+-        $this->assertInstanceOf('PhpOption\Some', LazyOption::fromValue('foo')->forAll(function($v) use (&$called, $self) {
++
++        // Due to some weird bug in PHP 5.3, class_alias() doesn't work as expected.
++        // Instead, to make it work, the classes have to be extended which breaks inheritance.
++        // To get these tests working properly, the real class it's returning has to be verified.
++        if (PHP_MAJOR_VERSION === 5 && PHP_MINOR_VERSION === 3) {
++            $class = 'UnicornFail\\PhpOption\\OptionInterface';
++        } else {
++            $class = 'PhpOption\\Some';
++        }
++        $this->assertInstanceOf($class, LazyOption::fromValue('foo')->forAll(function($v) use (&$called, $self) {
+             $called = true;
+             $self->assertEquals('foo', $v);
+         }));
+diff --git tests/PhpOption/Tests/NoneTest.php tests/PhpOption/Tests/NoneTest.php
+old mode 100644
+new mode 100755
+index 7ea644c..2a15aab
+--- tests/PhpOption/Tests/NoneTest.php
++++ tests/PhpOption/Tests/NoneTest.php
+@@ -1,10 +1,28 @@
+ <?php
+ 
++/**
++ * Copyright 2019 Mark Carver <mark.carver@me.com>
++ * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
+ namespace PhpOption\Tests;
+ 
+ use PhpOption\None;
++use PHPUnit\Framework\TestCase;
+ 
+-class NoneTest extends \PHPUnit_Framework_TestCase
++class NoneTest extends TestCase
+ {
+     private $none;
+ 
+diff --git tests/PhpOption/Tests/OptionTest.php tests/PhpOption/Tests/OptionTest.php
+old mode 100644
+new mode 100755
+index 1f59e1c..6652627
+--- tests/PhpOption/Tests/OptionTest.php
++++ tests/PhpOption/Tests/OptionTest.php
+@@ -1,33 +1,60 @@
+ <?php
+ 
++/**
++ * Copyright 2019 Mark Carver <mark.carver@me.com>
++ * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
+ namespace PhpOption\Tests;
+ 
+-use PhpOption\None;
+ use PhpOption\Option;
+-use PhpOption\Some;
++use PHPUnit\Framework\TestCase;
+ 
+-class OptionTest extends \PHPUnit_Framework_TestCase
++class OptionTest extends TestCase
+ {
++    protected function assertOptionInstance($expected, $actual) {
++        // Due to some weird bug in PHP 5.3, class_alias() doesn't work as expected.
++        // Instead, to make it work, the classes have to be extended which breaks inheritance.
++        // To get these tests working properly, the real class it's returning has to be verified.
++        if (PHP_MAJOR_VERSION === 5 && PHP_MINOR_VERSION === 3) {
++            $this->assertInstanceOf("UnicornFail\\$expected", $actual);
++        } else {
++            $this->assertInstanceOf($expected, $actual);
++        }
++
++    }
+     public function testfromValueWithDefaultNoneValue()
+     {
+-        $this->assertInstanceOf('PhpOption\None', \PhpOption\Option::fromValue(null));
+-        $this->assertInstanceOf('PhpOption\Some', \PhpOption\Option::fromValue('value'));
++        $this->assertOptionInstance('PhpOption\None', \PhpOption\Option::fromValue(null));
++        $this->assertOptionInstance('PhpOption\Some', \PhpOption\Option::fromValue('value'));
+     }
+ 
+     public function testFromValueWithFalseNoneValue()
+     {
+-        $this->assertInstanceOf('PhpOption\None', \PhpOption\Option::fromValue(false, false));
+-        $this->assertInstanceOf('PhpOption\Some', \PhpOption\Option::fromValue('value', false));
+-        $this->assertInstanceOf('PhpOption\Some', \PhpOption\Option::fromValue(null, false));
++        $this->assertOptionInstance('PhpOption\None', \PhpOption\Option::fromValue(false, false));
++        $this->assertOptionInstance('PhpOption\Some', \PhpOption\Option::fromValue('value', false));
++        $this->assertOptionInstance('PhpOption\Some', \PhpOption\Option::fromValue(null, false));
+     }
+ 
+     public function testFromArraysValue()
+     {
+-        $this->assertEquals(None::create(), Option::fromArraysValue('foo', 'bar'));
+-        $this->assertEquals(None::create(), Option::fromArraysValue(null, 'bar'));
+-        $this->assertEquals(None::create(), Option::fromArraysValue(array('foo' => 'bar'), 'baz'));
+-        $this->assertEquals(None::create(), Option::fromArraysValue(array('foo' => null), 'foo'));
+-        $this->assertEquals(new Some('foo'), Option::fromArraysValue(array('foo' => 'foo'), 'foo'));
++        $this->assertOptionInstance('PhpOption\None', Option::fromArraysValue('foo', 'bar'));
++        $this->assertOptionInstance('PhpOption\None', Option::fromArraysValue(null, 'bar'));
++        $this->assertOptionInstance('PhpOption\None', Option::fromArraysValue(array('foo' => 'bar'), 'baz'));
++        $this->assertOptionInstance('PhpOption\None', Option::fromArraysValue(array('foo' => null), 'foo'));
++        $this->assertOptionInstance('PhpOption\Some', Option::fromArraysValue(array('foo' => 'foo'), 'foo'));
+     }
+ 
+     public function testFromReturn()
+@@ -78,4 +105,4 @@ class OptionTest extends \PHPUnit_Framework_TestCase
+ 
+         $this->assertEquals('foo', $a->orElse($returns)->orElse($throws)->get());
+     }
+-}
+\ No newline at end of file
++}
+diff --git tests/PhpOption/Tests/SomeTest.php tests/PhpOption/Tests/SomeTest.php
+old mode 100644
+new mode 100755
+index 33b5501..8bd807b
+--- tests/PhpOption/Tests/SomeTest.php
++++ tests/PhpOption/Tests/SomeTest.php
+@@ -1,11 +1,41 @@
+ <?php
+ 
++/**
++ * Copyright 2019 Mark Carver <mark.carver@me.com>
++ * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
+ namespace PhpOption\Tests;
+ 
+ use PhpOption\Some;
++use PHPUnit\Framework\TestCase;
+ 
+-class SomeTest extends \PHPUnit_Framework_TestCase
++class SomeTest extends TestCase
+ {
++    protected function assertOptionInstance($expected, $actual) {
++        // Due to some weird bug in PHP 5.3, class_alias() doesn't work as expected.
++        // Instead, to make it work, the classes have to be extended which breaks inheritance.
++        // To get these tests working properly, the real class it's returning has to be verified.
++        if (PHP_MAJOR_VERSION === 5 && PHP_MINOR_VERSION === 3) {
++            $this->assertInstanceOf("UnicornFail\\$expected", $actual);
++        } else {
++            $this->assertInstanceOf($expected, $actual);
++        }
++
++    }
++
+     public function testGet()
+     {
+         $some = new \PhpOption\Some('foo');
+@@ -76,7 +106,7 @@ class SomeTest extends \PHPUnit_Framework_TestCase
+     {
+         $some = new Some('foo');
+ 
+-        $this->assertInstanceOf('PhpOption\None', $some->filter(function($v) { return 0 === strlen($v); }));
++        $this->assertOptionInstance('PhpOption\None', $some->filter(function($v) { return 0 === strlen($v); }));
+         $this->assertSame($some, $some->filter(function($v) { return strlen($v) > 0; }));
+     }
+ 
+@@ -84,7 +114,7 @@ class SomeTest extends \PHPUnit_Framework_TestCase
+     {
+         $some = new Some('foo');
+ 
+-        $this->assertInstanceOf('PhpOption\None', $some->filterNot(function($v) { return strlen($v) > 0; }));
++        $this->assertOptionInstance('PhpOption\None', $some->filterNot(function($v) { return strlen($v) > 0; }));
+         $this->assertSame($some, $some->filterNot(function($v) { return strlen($v) === 0; }));
+     }
+ 
+@@ -93,8 +123,8 @@ class SomeTest extends \PHPUnit_Framework_TestCase
+         $some = new Some('foo');
+ 
+         $this->assertSame($some, $some->select('foo'));
+-        $this->assertInstanceOf('PhpOption\None', $some->select('bar'));
+-        $this->assertInstanceOf('PhpOption\None', $some->select(true));
++        $this->assertOptionInstance('PhpOption\None', $some->select('bar'));
++        $this->assertOptionInstance('PhpOption\None', $some->select(true));
+     }
+ 
+     public function testReject()
+@@ -103,23 +133,24 @@ class SomeTest extends \PHPUnit_Framework_TestCase
+ 
+         $this->assertSame($some, $some->reject(null));
+         $this->assertSame($some, $some->reject(true));
+-        $this->assertInstanceOf('PhpOption\None', $some->reject('foo'));
++        $this->assertOptionInstance('PhpOption\None', $some->reject('foo'));
+     }
+ 
+     public function testFoldLeftRight()
+     {
+         $some = new Some(5);
+ 
+-        $this->assertSame(6, $some->foldLeft(1, function($a, $b) {
+-            $this->assertEquals(1, $a);
+-            $this->assertEquals(5, $b);
++        $self = $this;
++        $this->assertSame(6, $some->foldLeft(1, function($a, $b) use ($self) {
++            $self->assertEquals(1, $a);
++            $self->assertEquals(5, $b);
+ 
+             return $a + $b;
+         }));
+ 
+-        $this->assertSame(6, $some->foldRight(1, function($a, $b) {
+-            $this->assertEquals(1, $b);
+-            $this->assertEquals(5, $a);
++        $this->assertSame(6, $some->foldRight(1, function($a, $b) use ($self) {
++            $self->assertEquals(1, $b);
++            $self->assertEquals(5, $a);
+ 
+             return $a + $b;
+         }));
+-- 
+2.22.0
+

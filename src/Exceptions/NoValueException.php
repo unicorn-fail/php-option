@@ -16,4 +16,24 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+namespace UnicornFail\PhpOption\Exceptions;
+
+use RuntimeException;
+use UnicornFail\PhpOption\Utility\Helper;
+
+class NoValueException extends RuntimeException
+{
+    /**
+     * NoValueException constructor.
+     *
+     * @param mixed $caller
+     *   The caller where this was thrown.
+     */
+    public function __construct($caller)
+    {
+        parent::__construct(sprintf(
+            '%s has no value.',
+            Helper::toString($caller)
+        ));
+    }
+}

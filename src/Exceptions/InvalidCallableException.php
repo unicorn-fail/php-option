@@ -16,4 +16,24 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+namespace UnicornFail\PhpOption\Exceptions;
+
+use RuntimeException;
+use UnicornFail\PhpOption\Utility\Helper;
+
+class InvalidCallableException extends RuntimeException
+{
+    /**
+     * {@inheritDoc}
+     *
+     * @param string $callable
+     *   The callable that is not able to be invoked.
+     */
+    public function __construct($callable)
+    {
+        parent::__construct(sprintf(
+            'Invalid callable "%s"',
+            Helper::toString($callable)
+        ));
+    }
+}
