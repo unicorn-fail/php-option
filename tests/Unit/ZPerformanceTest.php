@@ -29,16 +29,27 @@ use UnicornFail\PhpOption\Some;
  */
 class ZPerformanceTest extends TestCase
 {
-    protected $output = array();
+    protected static $output;
     protected $performanceIterations = 10000;
 
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $output = &$this->output;
-        register_shutdown_function(function () use (&$output) {
-            print "\n" . implode("\n", $output);
-        });
+        $output = &static::$output;
+        // Only register once.
+        if ($output === null)
+        {
+            $output = array();
+            register_shutdown_function(function () use (&$output) {
+                print "\n" . implode("\n", $output) . "\n";
+            });
+        }
+    }
+
+    protected static function debug()
+    {
+        $args = func_get_args();
+        static::$output[] = call_user_func_array('sprintf', $args);
     }
 
     public function testNoneCase()
@@ -59,7 +70,7 @@ class ZPerformanceTest extends TestCase
         $optionTime = microtime(true) - $optionTime;
 
         $overheadPerInvocation = ($optionTime - $traditionalTime) / $this->performanceIterations;
-        $this->output[] = sprintf("Overhead per invocation (none case): %.9fs", $overheadPerInvocation);
+        $this->debug('Overhead per invocation (none case): %.9fs', $overheadPerInvocation);
 
         // This test is more for informational purposes, but all tests
         // must have at least one assertion for it to be considered valid.
@@ -84,8 +95,7 @@ class ZPerformanceTest extends TestCase
         $optionTime = microtime(true) - $optionTime;
 
         $overheadPerInvocation = ($optionTime - $traditionalTime) / $this->performanceIterations;
-
-        $this->output[] = sprintf("Overhead per invocation (some case): %.9fs\n", $overheadPerInvocation);
+        $this->debug('Overhead per invocation (some case): %.9fs', $overheadPerInvocation);
 
         // This test is more for informational purposes, but all tests
         // must have at least one assertion for it to be considered valid.

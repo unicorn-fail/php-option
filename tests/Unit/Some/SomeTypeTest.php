@@ -31,6 +31,7 @@ use UnicornFail\PhpOption\Tests\Framework\OptionTestCase;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\Some\SomeType
+ * @group typed
  */
 class SomeTypeTest extends OptionTestCase
 {

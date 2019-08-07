@@ -23,6 +23,7 @@ use UnicornFail\PhpOption\Tests\Framework\OptionTestCase;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\Some\SomeFloat
+ * @group typed
  */
 class SomeFloatTest extends OptionTestCase
 {

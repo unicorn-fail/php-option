@@ -24,6 +24,7 @@ use UnicornFail\PhpOption\Tests\Framework\OptionTestCase;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\Some\SomeArray
+ * @group typed
  */
 class SomeArrayTest extends OptionTestCase
 {

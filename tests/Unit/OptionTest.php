@@ -30,6 +30,7 @@ use UnicornFail\PhpOption\Tests\Fixtures\TestSome;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\Option
+ * @group core
  */
 class OptionTest extends TestCase
 {

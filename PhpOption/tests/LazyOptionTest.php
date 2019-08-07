@@ -22,6 +22,9 @@ namespace PhpOption\Tests;
 use PhpOption\LazyOption;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group bc
+ */
 class LazyOptionTest extends TestCase
 {
     private $subject;

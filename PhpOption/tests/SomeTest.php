@@ -22,6 +22,9 @@ namespace PhpOption\Tests;
 use PhpOption\Some;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group bc
+ */
 class SomeTest extends TestCase
 {
     protected function assertOptionInstance($expected, $actual) {

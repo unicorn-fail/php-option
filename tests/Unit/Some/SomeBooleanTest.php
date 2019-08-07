@@ -23,6 +23,7 @@ use UnicornFail\PhpOption\Tests\Framework\OptionTestCase;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\Some\SomeBoolean
+ * @group typed
  */
 class SomeBooleanTest extends OptionTestCase
 {

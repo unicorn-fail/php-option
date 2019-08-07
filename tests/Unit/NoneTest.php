@@ -26,6 +26,7 @@ use UnicornFail\PhpOption\Some;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\None
+ * @group core
  */
 class NoneTest extends TestCase
 {

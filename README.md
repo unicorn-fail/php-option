@@ -5,9 +5,9 @@
 [![Latest Version](https://img.shields.io/packagist/v/unicorn-fail/php-option.svg?style=flat-square)](https://packagist.org/packages/unicorn-fail/php-option)
 [![Total Downloads](https://img.shields.io/packagist/dt/unicorn-fail/php-option.svg?style=flat-square&color=blue)](https://packagist.org/packages/unicorn-fail/php-option)
 [![License](https://img.shields.io/github/license/unicorn-fail/php-option?color=blue&style=flat-square)](LICENSE)
-![PHP from Packagist](https://img.shields.io/packagist/php-v/unicorn-fail/php-option?style=flat-square)
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/unicorn-fail/php-option?style=flat-square)](https://travis-ci.com/unicorn-fail/php-option)
 
-[![Build Status](https://img.shields.io/travis/com/unicorn-fail/php-option.svg?style=flat-square)](https://travis-ci.org/unicorn-fail/php-option)
+[![Build Status](https://img.shields.io/travis/com/unicorn-fail/php-option.svg?style=flat-square)](https://travis-ci.com/unicorn-fail/php-option)
 [![Codacy grade](https://img.shields.io/codacy/grade/39609995560840e282fd401b6ce91b4f?style=flat-square)](https://www.codacy.com/app/unicorn-fail/php-option?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=unicorn-fail/php-option&amp;utm_campaign=Badge_Grade)
 [![Codacy coverage](https://img.shields.io/codacy/coverage/39609995560840e282fd401b6ce91b4f?style=flat-square)](https://www.codacy.com/app/unicorn-fail/php-option?utm_source=github.com&utm_medium=referral&utm_content=unicorn-fail/php-option&utm_campaign=Badge_Coverage)
 ![phpcs coding standard](https://img.shields.io/badge/phpcs-PSR2-brightgreen?style=flat-square)
@@ -302,7 +302,7 @@ Of course, performance is important. Included in the tests is a
 performance benchmark which you can run on a machine of your choosing:
 
 ```bash
-$ composer test-performance
+$ composer test-group performance
 ```
 
 At its core, the overhead incurred by using `Option` comes down to the time that it takes to

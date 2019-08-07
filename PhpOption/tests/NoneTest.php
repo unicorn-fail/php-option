@@ -22,6 +22,9 @@ namespace PhpOption\Tests;
 use PhpOption\None;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group bc
+ */
 class NoneTest extends TestCase
 {
     private $none;

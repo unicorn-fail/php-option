@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
  * Tests for Option::ensure() method
  *
  * @covers \PhpOption\Option::ensure
+ * @group bc
  */
 class EnsureTest extends TestCase
 {

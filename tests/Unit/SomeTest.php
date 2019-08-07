@@ -27,6 +27,7 @@ use UnicornFail\PhpOption\Tests\Fixtures\Repository;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\Some
+ * @group core
  */
 class SomeTest extends TestCase
 {

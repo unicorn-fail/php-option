@@ -23,7 +23,7 @@
         "require-phpmd": "composer require -o --dev phpmd/phpmd:^2.7",
         "require-phpstan": "composer require -o --dev phpstan/phpstan:^0.11",
         "require-test": "composer require -o --dev squizlabs/php_codesniffer:^3.4 phpmd/phpmd:^2.7 phpstan/phpstan:^0.11",
-        "test-performance": "php vendor/bin/phpunit --no-coverage tests/Unit/ZPerformanceTest.php",
+        "test-group": "php vendor/bin/phpunit --no-coverage --stop-on-failure --group",
         "test-phpcs": "php vendor/bin/phpcs src",
         "test-phpmd": "php vendor/bin/phpmd src text phpmd.xml",
         "test-phpstan": "php vendor/bin/phpstan analyse -c phpstan.neon",

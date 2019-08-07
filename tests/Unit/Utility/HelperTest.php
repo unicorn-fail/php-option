@@ -25,6 +25,7 @@ use UnicornFail\PhpOption\Utility\Helper;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\Utility\Helper
+ * @group utility
  */
 class HelperTest extends OptionTestCase
 {

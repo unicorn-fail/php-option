@@ -28,6 +28,7 @@ use UnicornFail\PhpOption\Tests\Fixtures\Repository;
 
 /**
  * @coversDefaultClass \UnicornFail\PhpOption\LazyOption
+ * @group core
  */
 class LazyOptionTest extends TestCase
 {
